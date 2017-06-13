@@ -41,7 +41,6 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
-nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
@@ -49,6 +48,14 @@ coverage.xml
 # Translations
 *.mo
 *.pot
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Rope
+.ropeproject
 
 # Django stuff:
 *.log
@@ -64,6 +71,13 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# Other filesystems
+.svn
+.DS_Store
+
+# Editors
+.*.swp
+*~
 # PyBuilder
 target/
 
@@ -90,9 +104,6 @@ ENV/
 # Spyder project settings
 .spyderproject
 .spyproject
-
-# Rope project settings
-.ropeproject
 
 # mkdocs documentation
 /site
