@@ -1,0 +1,28 @@
+#! /usr/bin/env tail -n +2 
+
+Take a script (or the last command)
+Parse it as bash or python
+    expect functions and a statement
+Goto the parsed node at the first statement 
+while node
+    if the node is at the script
+        the scope is the script with all functions removed
+            and boring stuff like imports hidden
+    elif the node is the last command
+        the scope is bash history
+    else
+        the scope is the current function
+    show node
+        show the scope that the node is in
+        highlight the node
+    get key:
+        f (default): execute node
+        <Left>,h: toggle d/s
+        i: insert new node
+        <Down>,j: move to current (or first) node in code below node (if available)
+        <Up>,k: move to node that called current scope
+        <Right>,l: toggle the showing of line numbers
+        q: quit
+        s: show node with names
+        v: show node with names replaced by values
+        else: Feck away outta that with yourself now, before I call the guards
