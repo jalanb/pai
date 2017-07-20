@@ -11,7 +11,7 @@
     <style> .blue {color:blue} </style>
     <style> .green {color:green} </style>
 
-pai v0.0.1 documentation
+pai v0.0.2 documentation
 ========================
 
 What is pai?
