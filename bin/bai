@@ -1,28 +1,48 @@
 #! /usr/bin/env tail -n +2 
 
-Take a script (or the last command)
-Parse it as bash or python
-    expect functions and a statement
-Goto the parsed node at the first statement 
-while node
-    if the node is at the script
-        the scope is the script with all functions removed
-            and boring stuff like imports hidden
-    elif the node is the last command
-        the scope is bash history
+Take a script (or the last command (or data))
+Parse it as bash or python or other languages
+    expect functions and statements
+Or parse it as data
+    expect data structures
+    expect language structures
+node = top = first parsed statement or datum or container 
+while node:
+    if node is top:
+        scope = top with all functions or containers removed
+            and boring stuff like imports or headers hidden
+    elif node is the last command:
+        if the last command invoked python
+            the scope is a python debugger in the frame of the /main/ function in invoked script
+        elif the scope is bash history:
+            the scope is a python debugger in the frame before the last call to a bash runner
+    elif the node is the last python call
+        the scope is a python debugger in that frame
+    elif the node is a container
+        the scope is the container
     else
-        the scope is the current function
+        the scope is the current function 
     show node
         show the scope that the node is in
         highlight the node
     get key:
-        f (default): execute node
-        <Left>,h: toggle d/s
-        i: insert new node
-        <Down>,j: move to current (or first) node in code below node (if available)
-        <Up>,k: move to node that called current scope
-        <Right>,l: toggle the showing of line numbers
         q: quit
+        a: add node
         s: show node with names
+        e: edit node
+        d: delete node
+        f (default): execute node
         v: show node with names replaced by values
-        else: Feck away outta that with yourself now, before I call the guards
+        h: move to node before the node
+        j: move to node below the node 
+        i: move into the node
+        k: move to node above the node
+        o: move out from the node
+        l: move to node after the node
+        <Left>: move to node before the node
+        <Down>: move to node below the node 
+        <PageDown>: move into the node
+        <Up>: move to node above the node
+        <Right>: move to node after the node
+        <PageUp>: move out of the node
+        else: Feck off away with yourself now, before I call the Gardaí
