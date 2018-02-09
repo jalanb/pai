@@ -1,0 +1,247 @@
+#! /usr/bin/env python3
+"""kai
+
+Show some lines from scripts
+    with help from pai
+"""
+
+import os
+import pathlib
+
+import urwid
+
+from pysyte import args as arguments
+from pysyte import getch
+from pysyte import iteration
+
+
+class Folder:
+    def __init__(self, s=None):
+        string = str(s) if s else '.'
+        thing = string if os.path.exists(string) else '.'
+        path = pathlib.Path(thing)
+        self._path = path.resolve()
+        self.joiner = '\n'
+        self.indent = ' '
+
+    def __str__(self):
+        return str(self._path)
+
+    @property
+    def name(self):
+        return self._path.name
+
+    @property
+    def parent(self):
+        return Folder(self._path.parent)
+
+    @property
+    def parts(self):
+        return self._path.parts
+
+    def iterdir(self):
+        for item in self._path.iterdir():
+            yield Folder(item)
+
+    def resolve(self):
+        return Folder(self._path.resolve())
+
+    def is_dir(self):
+        return self._path.is_dir()
+
+    def is_path(self):
+        return self.is_dir()
+
+    def is_file(self):
+        return self._path.is_file()
+
+    def children(self):
+        for item in self._path.iterdir():
+            if item.is_dir():
+                yield Folder(item)
+        for item in self._path.iterdir():
+            if item.is_dir():
+                continue
+            if item.is_file():
+                yield FileFolder(item)
+            if item.exists():
+                yield Folder(item)
+
+    def sibling(self, shift):
+        siblings = list(self.parent.iterdir())
+        names = [f.name for f in siblings]
+        try:
+            i = names.index(self.name)
+            result = siblings[i + shift]
+            if result.is_file():
+                return FileFolder(result)
+            return result
+        except (IndexError, ValueError):
+            return None
+
+    def prefix_line(self, level):
+        return self.indent * level
+
+    def display_text(self):
+        # pylint: disable=consider-using-ternary
+        return str(self._path) == '/' and '/' or self.name
+
+    def suffix_line(self, level):
+        # pylint: disable=no-self-use
+        # pylint: disable=unused-argument
+        return ''
+
+    def line(self, level):
+        return ''.join((
+            self.prefix_line(level),
+            self.display_text(),
+            self.suffix_line(level)
+        ))
+
+    def display(self, old_folders=None, level=0):
+        if str(self.parent) == str(self):
+            return self.joiner.join(
+                list(l.line(i) for i, l in enumerate(old_folders))
+            )
+        new_folders = [self] + (old_folders or [])
+        return self.parent.display(new_folders, level - 1)
+
+
+class FileFolder(Folder):
+    def iterdir(self):
+        return split_sections(self._path)
+
+    def is_dir(self):
+        return False
+
+    # pylint: disable=super-on-old-class
+    def is_path(self):
+        return self._path.is_file() or super(FileFolder, self).is_path()
+
+    def children(self):
+        return self.iterdir()
+
+    def sibling(self, shift):
+        result = super(FileFolder, self).sibling(shift)
+        if os.path.isfile(str(result)):
+            return FileFolder(result)
+        return result
+
+
+def split_sections(path):
+    lines = []
+    for line in path.read_text().splitlines():
+        if line:
+            lines.append(line)
+        else:
+            yield SectionFolder(lines, path)
+            lines = []
+    yield SectionFolder(lines, path)
+
+
+class SectionFolder(Folder):
+    def __init__(self, lines, parent):
+        self._lines = lines
+        self._parent = parent
+        super(SectionFolder, self).__init__(self.full_name())
+
+    @property
+    def name(self):
+        return self.lines[0].strip().split()[0]
+
+    def full_name(self):
+        return '#'.join((self._parent, self.name))
+
+    def is_dir(self):
+        return False
+
+    def is_file(self):
+        return False
+
+    def exists(self):
+        return bool(self._text)
+
+
+def parse_args():
+    """Parse out command line arguments"""
+    parser = arguments.parser(__doc__)
+    parser.strings('dirs', help='directory [CWD]')
+    parser.arg('-k', '--keys', help="Keys to feed to menu")
+    return parser.parse_args()
+
+
+def show(folder):
+    print(folder and folder.display() or '')
+
+
+def change(folder, command):
+    if command == 'up':
+        return folder.parent
+    elif command == 'down':
+        result = iteration.first_or(folder.children(), folder)
+        return result
+    elif command in ['left', 'right']:
+        sibling = folder.sibling(-1 if command == 'left' else +1)
+        return sibling if sibling else folder
+    elif command == 'in':
+        return folder
+    elif command == 'out':
+        return folder
+
+    return folder
+
+
+def get_command():
+    key = getch.get_key()
+    return name_command(key)
+
+
+def name_command(key):
+    keys = {
+        'q': 'quit',
+        'j': 'up',
+        'k': 'down',
+        'h': 'left',
+        'l': 'right',
+        'i': 'in',
+        'o': 'out',
+        'page up': 'out',
+        'page down': 'in',
+    }
+    if key in keys:
+        return keys[key]
+    if key in keys.values():
+        return key
+    raise KeyError('Unknown key: %r' % key)
+
+
+def your_wid(folder):
+
+    def show_or_exit(key):
+        command = name_command(key)
+        if command == 'quit':
+            raise urwid.ExitMainLoop()
+        nonlocal folder
+        folder = change(folder, command)
+        text.set_text(folder.display())
+
+    text = urwid.Text(folder.display())
+    fill = urwid.Filler(text, 'top')
+    return urwid.MainLoop(fill, unhandled_input=show_or_exit)
+
+
+def main():
+    """Run the script"""
+    args = parse_args()
+    if args.keys:
+        getch.cache_keys(
+            args.keys.split(',') if ',' in args.keys else args.keys)
+    folders = [Folder(d) for d in args.dirs]
+    dirs = [f for f in folders if f.is_dir()] or [Folder()]
+    folder = dirs[-1].resolve()  # TODO
+    loop = your_wid(folder)
+    loop.run()
+
+
+if __name__ == '__main__':
+    arguments.call_main(main)
