@@ -1,14 +1,14 @@
-"""tig 2.2 (Aug 11 2016)
+"""gii 0.0.2
 
-Usage: tig        [options] [revs] [--] [paths]
-   or: tig log    [options] [revs] [--] [paths]
-   or: tig show   [options] [revs] [--] [paths]
-   or: tig blame  [options] [rev] [--] path
-   or: tig grep   [options] [pattern]
-   or: tig refs
-   or: tig stash
-   or: tig status
-   or: tig <      [git command output]
+Usage: gii        [options] [revs] [--] [paths]
+   or: gii log    [options] [revs] [--] [paths]
+   or: gii show   [options] [revs] [--] [paths]
+   or: gii blame  [options] [rev] [--] path
+   or: gii grep   [options] [pattern]
+   or: gii refs
+   or: gii stash
+   or: gii status
+   or: gii <      [git command output]
 
 Options:
   +<number>       Select line <number> in the first view
