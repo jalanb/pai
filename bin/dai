@@ -1,8 +1,7 @@
 #! /usr/bin/env python3
-"""kai
+"""dai
 
-Show some lines from scripts
-    with help from pai
+Directory viewer, allegedly
 """
 
 import os
