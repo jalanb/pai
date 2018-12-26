@@ -13,7 +13,7 @@ setup(
     download_url='https://github.com/jalanb/%s/tarball/v%s' % (
         pai.__name__, pai.__version__),
     license='GPL License',
-    author='J Alan Brogan',
+    author="jalanb",
     author_email='github@al-got-rhythm.net',
     description=pai.__doc__,
     platforms='any',
