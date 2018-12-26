@@ -1,13 +1,7 @@
-"""gii 0.0.2
+#! /usr/bin/env python3
+"""gii
 
 Usage: gii        [options] [revs] [--] [paths]
-   or: gii log    [options] [revs] [--] [paths]
-   or: gii show   [options] [revs] [--] [paths]
-   or: gii blame  [options] [rev] [--] path
-   or: gii grep   [options] [pattern]
-   or: gii refs
-   or: gii stash
-   or: gii status
    or: gii <      [git command output]
 
 Options:
@@ -15,3 +9,28 @@ Options:
   -v, --version   Show version and exit
   -h, --help      Show help message and exit
 """
+from pysyte import args as arguments
+from pysyte.bash import git
+
+def parse_args():
+    """Parse out command line arguments"""
+    p = arguments.parser(__doc__)
+    p.sub('log')
+    p.sub('show')
+    p.sub('blame')
+    p.sub('grep')
+    p.sub('refs')
+    p.sub('stash')
+    p.sub('status')
+    p.sub('+<number>')
+    p.opt('-v', '--version')
+    return p.parse_args()
+
+
+def main():
+    """Run the script"""
+    args = parse_args()
+
+
+if __name__ == '__main__':
+    arguments.call_main(main)
