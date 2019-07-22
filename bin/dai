@@ -9,9 +9,15 @@ import pathlib
 
 import urwid
 
-from pysyte import args as arguments
-from pysyte import getch
+from pysyte.cli.main import run
+from pysyte.oss import getch
 from pysyte import iteration
+
+
+def add_args(parser):
+    """Parse out command line arguments"""
+    parser.positionals('dirs', help='directory [CWD]')
+    parser.boolean('-k', '--keys', help="Keys to feed to menu")
 
 
 class Folder:
@@ -161,14 +167,6 @@ class SectionFolder(Folder):
         return bool(self._text)
 
 
-def parse_args():
-    """Parse out command line arguments"""
-    parser = arguments.parser(__doc__)
-    parser.strings('dirs', help='directory [CWD]')
-    parser.arg('-k', '--keys', help="Keys to feed to menu")
-    return parser.parse_args()
-
-
 def show(folder):
     print(folder and folder.display() or '')
 
@@ -231,7 +229,6 @@ def your_wid(folder):
 
 def main():
     """Run the script"""
-    args = parse_args()
     if args.keys:
         getch.cache_keys(
             args.keys.split(',') if ',' in args.keys else args.keys)
@@ -240,7 +237,8 @@ def main():
     folder = dirs[-1].resolve()  # TODO
     loop = your_wid(folder)
     loop.run()
+    return True
 
 
 if __name__ == '__main__':
-    arguments.call_main(main)
+    run(main, add_args)

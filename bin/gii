@@ -9,28 +9,27 @@ Options:
   -v, --version   Show version and exit
   -h, --help      Show help message and exit
 """
-from pysyte import args as arguments
+
 from pysyte.bash import git
+from pysyte.cli.main import run
 
-def parse_args():
+def add_args(parser):
     """Parse out command line arguments"""
-    p = arguments.parser(__doc__)
-    p.sub('log')
-    p.sub('show')
-    p.sub('blame')
-    p.sub('grep')
-    p.sub('refs')
-    p.sub('stash')
-    p.sub('status')
-    p.sub('+<number>')
-    p.opt('-v', '--version')
-    return p.parse_args()
+    parser.string('log')
+    parser.string('show')
+    parser.string('blame')
+    parser.string('grep')
+    parser.string('refs')
+    parser.string('stash')
+    parser.string('status')
+    parser.string('+<number>')
+    parser.boolean('-v', '--version')
 
 
-def main():
+def main(args_):
     """Run the script"""
-    args = parse_args()
+    return True
 
 
 if __name__ == '__main__':
-    arguments.call_main(main)
+    run(main, add_args)

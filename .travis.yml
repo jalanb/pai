@@ -1,7 +1,9 @@
 language: python
 python:
 - '3.6'
-install: "pip install -r requirements.txt"
+install: pip install -r requirements.txt
 script: pytest
 notifications:
   email: false
+  slack:
+    secure: VBMyr9iq0EmJwqzTf1cKbddLtLVXadacWS30pTCqlHviNDdCpC9XRxmYf3UFc4rtfZ57G6xM+WyyYrE/L/A+fOKoD1eVq2wYBB/pi4F+3LtC/z2JZS5ztZIIygj03hugvv8jdE1O4FG5GwZE2SfOtZ3BaYLywpOaiYiVLYWPipNRRGPyTG0kzS8cXONJ9KYjXhxNGB6bqhYa7SM9yDKdf41+SaXdLHZSb9pysX28XnPT+6f+9b1ouATJxJUUYDXay01WB1IJcpz0UP9Gl7KVngTMfBMW6+GgZruVVSi2PvhvcR0n1OpLvuZV+3lfXi2foHLza7y2VBwhjwBvWAH8rHsorZm1yOb/FLmaOgT+LMysHPcWjttEsvYGEWmsoShw9A4hU+I61GrBgZMoSjUvOWN0e8cck8b56Lz10cgMK5uU4McXLv7Y3/RkhbLtP0ZUc3PURx+qKgZXH3k+ncUYsYk7AWBbf79a729SaB1NxanR8k7cHWzC1osz4RrHHjYfjfrR96hl8hH1A81xzgGiYgrpbbQO0HOtskM9kLLZCawrk6yBgaNwhDC7T40SvG81MYsWSNywQWGRMIMWpRsAylT4BzFNh9VWY+65hlEtBhCOgSpstRPQ1W4xQ3n8u/oKgfXBAvC82EJlcn8WEUoODrR7PDufPE8sDjiPzANiBIg=
