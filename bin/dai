@@ -17,7 +17,7 @@ from pysyte import iteration
 def add_args(parser):
     """Parse out command line arguments"""
     parser.positionals('dirs', help='directory [CWD]')
-    parser.boolean('-k', '--keys', help="Keys to feed to menu")
+    parser.boolean('', 'keys', help="Keys to feed to menu")
 
 
 class Folder:
