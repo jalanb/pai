@@ -16,14 +16,14 @@ from pysyte.cli.main import run
 def add_args(parser):
     """Parse out command line arguments"""
     parser.positional('files', help='files to edit')
-    parser.integer('-a', '--at', default=None, help='Show line at the line number')
-    parser.boolean('-c', '--clipboard', help='Get lines from clipboard')
-    parser.string('-f', '--first', default="1",
+    parser.integer('', 'at', default=None, help='Show line at the line number')
+    parser.boolean('', 'clipboard', help='Get lines from clipboard')
+    parser.string('', 'first', default="1",
                help='number of or regexp / code in first line to show')
-    parser.string('-l', '--last', default="0",
+    parser.string('', 'last', default="0",
                help='number of or regexp / code in last line to show')
-    parser.boolean('-n', '--numbers', help='Show line numbers')
-    parser.integer('-w', '--width', help='Max width of shown line')
+    parser.boolean('', 'numbers', help='Show line numbers')
+    parser.integer('', 'width', help='Max width of shown line')
 
 
 def cut_lines(args, lines_read):
@@ -95,7 +95,6 @@ def show_stream(stream, args):
         print(out)
 
 
-@run(add_args)
 def main(args):
     """Run the script"""
     for stream in streams.any():
@@ -103,3 +102,4 @@ def main(args):
     return True
 
 
+run(main, add_args)

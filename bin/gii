@@ -23,7 +23,7 @@ def add_args(parser):
     parser.string('stash')
     parser.string('status')
     parser.string('+<number>')
-    parser.boolean('-v', '--version')
+    parser.boolean('', 'version')
 
 
 def main(args_):
